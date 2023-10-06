@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Shouko Nishimiya](https://up.htmlacademy.ru/javascript/30/user/2344963).
-* Наставник: `Неизвестно`.
+* Наставник: `Юрий Белобородов`(https://htmlacademy.ru/profile/id514591).
 
 ---
 
