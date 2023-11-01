@@ -38,3 +38,20 @@ window.console.log('Тест №5. Ожидаю NaN, получаю - ', numberF
 window.console.log('Тест №6. Ожидаю 2023, получаю - ', numberFromString(2023)); //2023
 window.console.log('Тест №7. Ожидаю 1, получаю - ', numberFromString(-1)); // 1
 window.console.log('Тест №8. Ожидаю 15, получаю - ', numberFromString(1.5)); // 15
+
+function getMinutesInteger (time) {
+  return parseInt(time.split(':')[0], 10) * 60 + parseInt(time.split(':')[1], 10);
+}
+
+function isWorkTime (workBeginning, workEnding, meetingBeginning, meetingDuration) {
+  workBeginning = getMinutesInteger(workBeginning);
+  workEnding = getMinutesInteger(workEnding);
+  meetingBeginning = getMinutesInteger(meetingBeginning);
+  return workBeginning <= meetingBeginning && meetingBeginning + meetingDuration <= workEnding;
+}
+
+window.console.log('Тест №1. Ожидаю true, получаю - ', isWorkTime('08:00', '17:30', '14:00', 90)); // true
+window.console.log('Тест №2. Ожидаю true, получаю - ', isWorkTime('8:0', '10:0', '8:0', 120)); // true
+window.console.log('Тест №3. Ожидаю false, получаю - ', isWorkTime('08:00', '14:30', '14:00', 90)); // false
+window.console.log('Тест №4. Ожидаю false, получаю - ', isWorkTime('14:00', '17:30', '08:0', 90)); // false
+window.console.log('Тест №5. Ожидаю false, получаю - ', isWorkTime('8:00', '17:30', '08:00', 900)); // false
