@@ -27,11 +27,11 @@ const MESSAGES_LIST = [
 const NAMES = ['Иван', 'Алексей', 'Елена', 'Мария', 'Андрей', 'Ольга', 'Николай', 'Анна', 'Дмитрий', 'Светлана'];
 
 
-const generateCommentId = getRandomId(1, 999);
-const generatePhotoId = getRandomId(1, PHOTO_COUNT);
+const getCommentId = getRandomId(1, 999);
+const getPhotoId = getRandomId(1, PHOTO_COUNT);
 
-function createComment() {
-  const commentId = generateCommentId();
+function createCommentData() {
+  const commentId = getCommentId();
 
   return ({
     id: commentId,
@@ -41,18 +41,18 @@ function createComment() {
   });
 }
 
-function createPhoto() {
-  const photoId = generatePhotoId();
+function createPhotoData() {
+  const photoId = getPhotoId();
 
   return ({
     id: photoId,
     url: `photos/${photoId}.jpg`,
     description: getRandomArrayElement(DESCRIPTION_LIST),
     likes: getRandomPositiveInteger(0, 200),
-    comments: Array.from({ length: getRandomPositiveInteger(0, 30) }, createComment),
+    comments: Array.from({ length: getRandomPositiveInteger(0, 30) }, createCommentData),
   });
 }
 
-const photos = Array.from({ length: PHOTO_COUNT }, createPhoto);
+const getPhotosData = () => Array.from({ length: PHOTO_COUNT }, createPhotoData);
 
-export {photos};
+export {getPhotosData};
