@@ -1,3 +1,9 @@
-import {photos} from './data.js';
+import {getPhotosData} from './data.js';
+import {renderPictures} from './template-сollector.js';
 
-window.console.log(photos);
+// получаем массив данных для картинок
+const photosData = getPhotosData();
+
+renderPictures(photosData);
+window.console.log(photosData);
+
