@@ -1,4 +1,4 @@
-const picturesListElement = document.querySelector('.pictures');
+const picturesContainerElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 const createPictureElemet = ({ id, url, description, likes, comments }) => {
@@ -14,12 +14,12 @@ const createPictureElemet = ({ id, url, description, likes, comments }) => {
 
 const renderPictures = (picturesData) => {
 //создаем закадровый DOM объект для добавления эллементов узлов DOM для того, чтобы не производить перекомпановку страницы после каждого добавленого узла
-  const picturesListFragment = document.createDocumentFragment();
+  const picturesContainerFragment = document.createDocumentFragment();
   picturesData.forEach((pictureData) => {
     const pictureElement = createPictureElemet(pictureData);
-    picturesListFragment.append(pictureElement);
+    picturesContainerFragment.append(pictureElement);
   });
-  picturesListElement.append(picturesListFragment);
+  picturesContainerElement.append(picturesContainerFragment);
 };
 
 export {renderPictures};
