@@ -16,7 +16,7 @@ function fillBigPicture({ url, description, likes, comments }) {
   bigPictureElement.querySelector('.big-picture__img')
     .querySelector('img').alt = description;
   bigPictureElement.querySelector('.likes-count').textContent = likes;
-  bigPictureElement.querySelector('.social__comment-shown-count').textContent = bigPictureElement.querySelectorAll('.social__comment').length;
+  bigPictureElement.querySelector('.social__comment-shown-count').textContent = bigPictureElement.querySelectorAll('.social__comment:not(.hidden)').length;
   bigPictureElement.querySelector('.social__comment-total-count').textContent = comments.length;
   bigPictureElement.querySelector('.social__caption').textContent = description;
 }
@@ -53,8 +53,6 @@ function openBigPicture() {
   bigPictureElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
-  commentCountElement.classList.add('hidden');
-  commentsLoaderElement.classList.add('hidden');
 }
 
 function closeBigPicture() {
@@ -66,23 +64,10 @@ function closeBigPicture() {
 }
 
 function onPicturesContainerClick(evt) {
-  const targetId = evt.target.parentNode.id;
+  const targetId = evt.target.matches('.picture').id;
   const pictureData = photosData.find((element) => element.id === Number(targetId));
 
-  if (evt.target.matches('.picture__img')) {
-    evt.preventDefault();
-    openBigPicture();
-  }
-
-  renderComments(pictureData.comments);
-  fillBigPicture(pictureData);
-}
-
-function onPicturesContainerKeydown(evt) {
-  const targetId = evt.target.id;
-  const pictureData = photosData.find((element) => element.id === Number(targetId));
-
-  if (isEnterKey(evt)) {
+  if (evt.target.matches('.picture__img') || isEnterKey(evt)) {
     evt.preventDefault();
     openBigPicture();
   }
@@ -92,6 +77,6 @@ function onPicturesContainerKeydown(evt) {
 }
 
 picturesContainerElement.addEventListener('click', onPicturesContainerClick);
-picturesContainerElement.addEventListener('keydown', onPicturesContainerKeydown);
+picturesContainerElement.addEventListener('keydown', onPicturesContainerClick);
 overlayCloseButton.addEventListener('click', closeBigPicture);
 
