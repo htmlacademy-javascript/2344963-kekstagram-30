@@ -64,10 +64,10 @@ function closeBigPicture() {
 }
 
 function onPicturesContainerClick(evt) {
-  const targetId = evt.target.matches('.picture').id;
+  const targetId = evt.target.closest('.picture').id;
   const pictureData = photosData.find((element) => element.id === Number(targetId));
 
-  if (evt.target.matches('.picture__img') || isEnterKey(evt)) {
+  if (evt.target.closest('.picture__img') || isEnterKey(evt)) {
     evt.preventDefault();
     openBigPicture();
   }
