@@ -53,6 +53,8 @@ function openBigPicture() {
   bigPictureElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
+  commentCountElement.classList.add('hidden');
+  commentsLoaderElement.classList.add('hidden');
 }
 
 function closeBigPicture() {
