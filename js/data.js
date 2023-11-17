@@ -53,6 +53,6 @@ function createPhotoData() {
   });
 }
 
-const getPhotosData = () => Array.from({ length: PHOTO_COUNT }, createPhotoData);
+const photosData = Array.from({ length: PHOTO_COUNT }, createPhotoData);
 
-export {getPhotosData};
+export {photosData};
