@@ -81,23 +81,23 @@ function closeBigPicture() {
 }
 
 function onPicturesContainerClick(evt) {
-  const targetId = evt.target.closest('.picture').id;
-  const pictureData = photosData.find((element) => element.id === Number(targetId));
-
   if (evt.target.closest('.picture__img') || isEnterKey(evt)) {
+    const targetId = evt.target.closest('.picture').id;
+    const pictureData = photosData.find((element) => element.id === Number(targetId));
+
     evt.preventDefault();
     openBigPicture();
+
+    currentIndex = 0;
+    commentsLoaderElement.classList.remove('hidden');
+    commentsArray = [];
+    bigPictureElement.querySelector('.social__comment-shown-count').textContent = 0;
+
+    commentsArray = pictureData.comments;
+
+    fillBigPicture(pictureData);
+    renderComments();
   }
-
-  currentIndex = 0;
-  commentsLoaderElement.classList.remove('hidden');
-  commentsArray = [];
-  bigPictureElement.querySelector('.social__comment-shown-count').textContent = 0;
-
-  commentsArray = pictureData.comments;
-
-  fillBigPicture(pictureData);
-  renderComments();
 }
 
 picturesContainerElement.addEventListener('click', onPicturesContainerClick);
