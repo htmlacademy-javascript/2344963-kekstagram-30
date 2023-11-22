@@ -8,6 +8,11 @@ const modal = form.querySelector('.img-upload__overlay');
 const hashtagField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
 
+const imgUploadPreview = document.querySelector('.img-upload__preview');
+const scaleControlValue = document.querySelector('.scale__control--value');
+const effectLevel = document.querySelector('.img-upload__effect-level');
+
+
 const hashtagRegularExpression = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const pristine = new Pristine(form, {
@@ -46,6 +51,10 @@ function hideModal() {
   cancel.removeEventListener('click', hideModal);
   document.removeEventListener('keydown', onDocumentKeydown);
   input.addEventListener('change', showModal);
+  imgUploadPreview.style.removeProperty('transform');
+  scaleControlValue.value = '100%';
+  imgUploadPreview.style.removeProperty('filter');
+  effectLevel.classList.add('hidden');
 
   // Сброс значения поля выбора файла
   input.value = '';
