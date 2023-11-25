@@ -1,5 +1,5 @@
 import { isEscapeKey, isEnterKey } from './util.js';
-import { photosData } from './data.js';
+import { photosData } from './thumbnail-images.js';
 
 const bodyElement = document.querySelector('body');
 
