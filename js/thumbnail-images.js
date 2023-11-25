@@ -1,6 +1,8 @@
 const picturesContainerElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
+let photosData = [];
+
 const createPictureElemet = ({ id, url, description, likes, comments }) => {
   const pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.setAttribute('id', id);
@@ -13,7 +15,8 @@ const createPictureElemet = ({ id, url, description, likes, comments }) => {
 };
 
 const renderPictures = (picturesData) => {
-//создаем закадровый DOM объект для добавления эллементов узлов DOM для того, чтобы не производить перекомпановку страницы после каждого добавленого узла
+  photosData = picturesData;
+  //создаем закадровый DOM объект для добавления эллементов узлов DOM для того, чтобы не производить перекомпановку страницы после каждого добавленого узла
   const picturesContainerFragment = document.createDocumentFragment();
   picturesData.forEach((pictureData) => {
     const pictureElement = createPictureElemet(pictureData);
@@ -22,4 +25,4 @@ const renderPictures = (picturesData) => {
   picturesContainerElement.append(picturesContainerFragment);
 };
 
-export {renderPictures};
+export { renderPictures, photosData };
