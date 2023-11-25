@@ -3,6 +3,10 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 
 let photosData = [];
 
+function saveData(data) {
+  photosData = data;
+}
+
 const createPictureElemet = ({ id, url, description, likes, comments }) => {
   const pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.setAttribute('id', id);
@@ -15,7 +19,10 @@ const createPictureElemet = ({ id, url, description, likes, comments }) => {
 };
 
 const renderPictures = (picturesData) => {
-  photosData = picturesData;
+  const thumbnails = picturesContainerElement.querySelectorAll('.picture');
+  thumbnails.forEach((element) => {
+    element.remove();
+  });
   //создаем закадровый DOM объект для добавления эллементов узлов DOM для того, чтобы не производить перекомпановку страницы после каждого добавленого узла
   const picturesContainerFragment = document.createDocumentFragment();
   picturesData.forEach((pictureData) => {
@@ -25,4 +32,4 @@ const renderPictures = (picturesData) => {
   picturesContainerElement.append(picturesContainerFragment);
 };
 
-export { renderPictures, photosData };
+export { renderPictures, photosData, saveData };
