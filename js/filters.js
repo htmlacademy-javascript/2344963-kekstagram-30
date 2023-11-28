@@ -5,11 +5,10 @@ const filters = document.querySelector('.img-filters');
 const filterDefaultButton = filters.querySelector('#filter-default');
 const filterRandomButton = filters.querySelector('#filter-random');
 const filterDiscussedButton = filters.querySelector('#filter-discussed');
+const filtersButton = filters.querySelectorAll('.img-filters__button');
 
 const RERENDER_DELAY = 500;
 const RANDOM_ARRAY_ELEMENT_COUNT = 10;
-
-filterDefaultButton.disabled = true;
 
 function showFilters() {
   filters.classList.remove('img-filters--inactive');
@@ -17,12 +16,8 @@ function showFilters() {
 
 function onFiltersButton(evt) {
   if (evt.target.closest('.img-filters__button') || isEnterKey(evt)) {
-    const activeButton = filters.querySelector('.img-filters__button--active');
-    activeButton.disabled = false;
-    activeButton.classList.remove('img-filters__button--active');
     evt.preventDefault();
     evt.target.classList.add('img-filters__button--active');
-    evt.target.disabled = true;
     switch (evt.target) {
       case filterDefaultButton:
         renderPictures(photosData);
@@ -67,5 +62,11 @@ filters.addEventListener('click', debounce(
   onFiltersButton,
   RERENDER_DELAY,
 ));
+
+filters.addEventListener('mouseup', ({target}) => {
+  filtersButton.forEach((element) => element.classList.remove('img-filters__button--active'));
+  target.classList.add('img-filters__button--active');
+});
+
 
 export { showFilters };
