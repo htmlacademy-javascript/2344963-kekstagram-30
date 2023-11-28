@@ -14,7 +14,7 @@ const preview = document.querySelector('.img-upload__preview img');
 const hashtagField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
 const submit = form.querySelector('.img-upload__submit');
-
+const effectsPreview = document.querySelectorAll('.effects__preview');
 const imgUploadPreview = document.querySelector('.img-upload__preview');
 const effectLevel = document.querySelector('.img-upload__effect-level');
 
@@ -58,6 +58,7 @@ function hideModal() {
   effectLevel.classList.add('hidden');
   input.value = '';
   form.reset();
+  pristine.reset();
 }
 
 function onChooseFile() {
@@ -67,6 +68,9 @@ function onChooseFile() {
     const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
     if (matches) {
       preview.src = URL.createObjectURL(file);
+      effectsPreview.forEach((element) => {
+        element.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+      });
       showModal();
     }
   }
@@ -82,7 +86,7 @@ function validateHashtagField(value) {
     return true;
   }
 
-  const arrayHashtags = value.split(' ');
+  const arrayHashtags = value.split(' ').filter(Boolean);
   let isValid = true;
 
   arrayHashtags.forEach((element) => {
@@ -95,12 +99,12 @@ function validateHashtagField(value) {
 }
 
 function checksHashtagsCount(value) {
-  const arrayHashtags = value.split(' ');
+  const arrayHashtags = value.split(' ').filter(Boolean);
   return arrayHashtags.length <= 5;
 }
 
 function checksHashtagsForRepetition(value) {
-  const arrayHashtags = value.split(' ');
+  const arrayHashtags = value.split(' ').filter(Boolean);
   const newArrayHashtags = [];
   let isValid = true;
 
