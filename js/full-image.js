@@ -1,4 +1,4 @@
-import { isEscapeKey, isEnterKey } from './util.js';
+import { isEscapeKey } from './util.js';
 import { photosData } from './thumbnail-images.js';
 
 const bodyElement = document.querySelector('body');
@@ -81,7 +81,7 @@ function closeBigPicture() {
 }
 
 function onPicturesContainerClick(evt) {
-  if (evt.target.closest('.picture__img') || isEnterKey(evt)) {
+  if (evt.target.closest('.picture__img')) {
     const targetId = evt.target.closest('.picture').id;
     const pictureData = photosData.find((element) => element.id === Number(targetId));
 

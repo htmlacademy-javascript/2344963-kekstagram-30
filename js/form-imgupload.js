@@ -2,20 +2,21 @@ import { isEscapeKey } from './util.js';
 import { sendData } from './api.js';
 import { showAlert, isAlertOpen } from './alert.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const HASHTAG_REGULAR_EXPRESSION = /^#[a-zа-яё0-9]{1,19}$/i;
+
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
 const input = form.querySelector('.img-upload__input');
 const cancel = form.querySelector('.img-upload__cancel');
 const modal = form.querySelector('.img-upload__overlay');
+const preview = document.querySelector('.img-upload__preview img');
 const hashtagField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
 const submit = form.querySelector('.img-upload__submit');
 
 const imgUploadPreview = document.querySelector('.img-upload__preview');
 const effectLevel = document.querySelector('.img-upload__effect-level');
-
-
-const hashtagRegularExpression = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -36,14 +37,12 @@ function onDocumentKeydown(evt) {
 }
 
 function showModal() {
-  if (this.files && this.files[0]) {
-    modal.classList.remove('hidden');
-    body.classList.add('modal-open');
+  modal.classList.remove('hidden');
+  body.classList.add('modal-open');
 
-    cancel.addEventListener('click', hideModal);
-    document.addEventListener('keydown', onDocumentKeydown);
-    input.removeEventListener('change', showModal);
-  }
+  cancel.addEventListener('click', hideModal);
+  document.addEventListener('keydown', onDocumentKeydown);
+  input.disabled = true;
 }
 
 function hideModal() {
@@ -52,11 +51,25 @@ function hideModal() {
 
   cancel.removeEventListener('click', hideModal);
   document.removeEventListener('keydown', onDocumentKeydown);
-  input.addEventListener('change', showModal);
+
+  input.disabled = false;
+
   imgUploadPreview.style = 'none';
   effectLevel.classList.add('hidden');
   input.value = '';
   form.reset();
+}
+
+function onChooseFile() {
+  if (this.files && this.files[0]) {
+    const file = this.files[0];
+    const fileName = file.name.toLowerCase();
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    if (matches) {
+      preview.src = URL.createObjectURL(file);
+      showModal();
+    }
+  }
 }
 
 function validateCommentField(value) {
@@ -73,7 +86,7 @@ function validateHashtagField(value) {
   let isValid = true;
 
   arrayHashtags.forEach((element) => {
-    if (!hashtagRegularExpression.test(element)) {
+    if (!HASHTAG_REGULAR_EXPRESSION.test(element)) {
       isValid = false;
     }
   });
@@ -117,6 +130,7 @@ function setUserFormSubmit(onSuccess) {
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
+      input.disabled = false;
       sendData(new FormData(evt.target))
         .then(() => {
           onSuccess();
@@ -137,7 +151,7 @@ pristine.addValidator(hashtagField, checksHashtagsCount, 'Превышено к�
 pristine.addValidator(hashtagField, checksHashtagsForRepetition, 'Хэш-теги не должны повторяться', 2, false);
 
 
-input.addEventListener('change', showModal);
+input.addEventListener('change', onChooseFile);
 
 
 export { setUserFormSubmit, hideModal };
