@@ -7,7 +7,7 @@ function saveData(data) {
   photosData = data;
 }
 
-const createPictureElemet = ({ id, url, description, likes, comments }) => {
+function createPictureElemet ({ id, url, description, likes, comments }) {
   const pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.setAttribute('id', id);
   pictureElement.querySelector('.picture__img').src = url;
@@ -16,9 +16,9 @@ const createPictureElemet = ({ id, url, description, likes, comments }) => {
   pictureElement.querySelector('.picture__comments').textContent = comments.length;
 
   return pictureElement;
-};
+}
 
-const renderPictures = (picturesData) => {
+function renderPictures (picturesData) {
   const thumbnails = picturesContainerElement.querySelectorAll('.picture');
   thumbnails.forEach((element) => {
     element.remove();
@@ -30,6 +30,6 @@ const renderPictures = (picturesData) => {
     picturesContainerFragment.append(pictureElement);
   });
   picturesContainerElement.append(picturesContainerFragment);
-};
+}
 
 export { renderPictures, photosData, saveData };

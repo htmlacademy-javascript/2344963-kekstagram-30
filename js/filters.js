@@ -5,7 +5,6 @@ const filters = document.querySelector('.img-filters');
 const filterDefaultButton = filters.querySelector('#filter-default');
 const filterRandomButton = filters.querySelector('#filter-random');
 const filterDiscussedButton = filters.querySelector('#filter-discussed');
-const filtersButton = filters.querySelectorAll('.img-filters__button');
 
 const RERENDER_DELAY = 500;
 const RANDOM_ARRAY_ELEMENT_COUNT = 10;
@@ -14,10 +13,9 @@ function showFilters() {
   filters.classList.remove('img-filters--inactive');
 }
 
-function onFiltersButton(evt) {
+function onFiltersButtonClick(evt) {
   if (evt.target.closest('.img-filters__button') || isEnterKey(evt)) {
     evt.preventDefault();
-    evt.target.classList.add('img-filters__button--active');
     switch (evt.target) {
       case filterDefaultButton:
         renderPictures(photosData);
@@ -32,19 +30,28 @@ function onFiltersButton(evt) {
   }
 }
 
+function onFilterButtonMouseup(evt) {
+  if (evt.target.closest('.img-filters__button') || isEnterKey(evt)) {
+    const activeButton = filters.querySelector('.img-filters__button--active');
+    activeButton.classList.remove('img-filters__button--active');
+    evt.preventDefault();
+    evt.target.classList.add('img-filters__button--active');
+  }
+}
+
 function getRandomArray(arr) {
-  const result = [];
+  const randomPictures = [];
   let count = RANDOM_ARRAY_ELEMENT_COUNT;
   if (count > arr.length) {
     count = arr.length;
   }
-  const tempArr = [...arr];
+  const tempElements = [...arr];
   for (let i = 0; i < count; i++) {
-    const randomElement = getRandomArrayElement(tempArr);
-    result.push(randomElement);
-    tempArr.splice(tempArr.indexOf(randomElement), 1);
+    const randomElement = getRandomArrayElement(tempElements);
+    randomPictures.push(randomElement);
+    tempElements.splice(tempElements.indexOf(randomElement), 1);
   }
-  return result;
+  return randomPictures;
 }
 
 function getDiscussedArray(arr) {
@@ -59,14 +66,11 @@ function discussedPhotos(photoA, photoB) {
 }
 
 filters.addEventListener('click', debounce(
-  onFiltersButton,
+  onFiltersButtonClick,
   RERENDER_DELAY,
 ));
 
-filters.addEventListener('mouseup', ({target}) => {
-  filtersButton.forEach((element) => element.classList.remove('img-filters__button--active'));
-  target.classList.add('img-filters__button--active');
-});
+filters.addEventListener('mouseup', onFilterButtonMouseup);
 
 
 export { showFilters };
