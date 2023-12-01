@@ -1,13 +1,13 @@
 import { isEnterKey, debounce, getRandomArrayElement } from './util.js';
 import { renderPictures, photosData } from './thumbnail-images.js';
 
+const RERENDER_DELAY = 500;
+const RANDOM_ARRAY_ELEMENT_COUNT = 10;
+
 const filters = document.querySelector('.img-filters');
 const filterDefaultButton = filters.querySelector('#filter-default');
 const filterRandomButton = filters.querySelector('#filter-random');
 const filterDiscussedButton = filters.querySelector('#filter-discussed');
-
-const RERENDER_DELAY = 500;
-const RANDOM_ARRAY_ELEMENT_COUNT = 10;
 
 function showFilters() {
   filters.classList.remove('img-filters--inactive');
