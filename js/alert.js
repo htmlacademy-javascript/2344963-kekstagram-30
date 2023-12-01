@@ -24,10 +24,16 @@ function showAlert(id) {
   }, ALERT_SHOW_TIME);
 }
 
+function cleanAlertListeners() {
+  document.removeEventListener('keydown', onDocumentKeydown);
+  alertElement.removeEventListener('click', onWindowClick);
+}
+
 function hideAlert() {
   isAlertOpen = false;
   alertElement.remove();
   clearTimeout(alertTimer);
+  cleanAlertListeners();
 }
 
 function onDocumentKeydown(evt) {

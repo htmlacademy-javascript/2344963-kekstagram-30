@@ -1,3 +1,52 @@
+const ScaleSettings = {
+  STEP_VALUE: 25,
+  MAX_VALUE: 100,
+  MIN_VALUE: 25
+};
+
+const EffectsOptions = {
+  chrome: {
+    range: {
+      min: 0,
+      max: 1
+    },
+    start: 1,
+    step: 0.1
+  },
+  sepia: {
+    range: {
+      min: 0,
+      max: 1
+    },
+    start: 1,
+    step: 0.1
+  },
+  marvin: {
+    range: {
+      min: 0,
+      max: 100
+    },
+    start: 100,
+    step: 1
+  },
+  phobos: {
+    range: {
+      min: 0,
+      max: 3
+    },
+    start: 3,
+    step: 0.1
+  },
+  heat: {
+    range: {
+      min: 1,
+      max: 3
+    },
+    start: 3,
+    step: 0.1
+  }
+};
+
 const scaleEditor = document.querySelector('.img-upload__scale');
 const scaleControlSmaller = scaleEditor.querySelector('.scale__control--smaller');
 const scaleControlBigger = scaleEditor.querySelector('.scale__control--bigger');
@@ -10,12 +59,12 @@ const effectsList = document.querySelector('.effects__list');
 // Обработчик изменения масштаба
 function changeScale(direction) {
   const currentValue = parseInt(scaleControlValue.value, 10);
-  const newValue = currentValue + (direction * 25);
+  const newValue = currentValue + (direction * ScaleSettings.STEP_VALUE);
 
   // Проверяем, что новое значение не выходит за пределы
-  if (newValue >= 25 && newValue <= 100) {
+  if (newValue >= ScaleSettings.MIN_VALUE && newValue <= ScaleSettings.MAX_VALUE) {
     scaleControlValue.value = `${newValue}%`;
-    imgUploadPreview.style.transform = `scale(${newValue / 100})`;
+    imgUploadPreview.style.transform = `scale(${newValue / ScaleSettings.MAX_VALUE})`;
   }
 }
 
@@ -72,7 +121,7 @@ slider.noUiSlider.on('update', () => {
   }
 
   // Обновляем значение value изображения
-  effectLevelValue.value = value;
+  effectLevelValue.setAttribute('value', `${value}`);
 });
 
 effectLevel.classList.add('hidden');
@@ -82,62 +131,10 @@ effectsList.addEventListener('change', (evt) => {
   const effect = evt.target.value;
   effectLevel.classList.remove('hidden');
 
-  switch (effect) {
-    case 'chrome':
-      slider.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1
-        },
-        start: 1,
-        step: 0.1
-      });
-      break;
-    case 'sepia':
-      slider.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 1
-        },
-        start: 1,
-        step: 0.1
-      });
-      break;
-    case 'marvin':
-      slider.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 100
-        },
-        start: 100,
-        step: 1
-      });
-      break;
-    case 'phobos':
-      slider.noUiSlider.updateOptions({
-        range: {
-          min: 0,
-          max: 3
-        },
-        start: 3,
-        step: 0.1
-      });
-      break;
-    case 'heat':
-      slider.noUiSlider.updateOptions({
-        range: {
-          min: 1,
-          max: 3
-        },
-        start: 3,
-        step: 0.1
-      });
-      break;
-    case 'none':
-      imgUploadPreview.style.removeProperty('filter');
-      effectLevel.classList.add('hidden');
-      break;
-    default:
-      break;
+  if (effect === 'none') {
+    imgUploadPreview.style.removeProperty('filter');
+    effectLevel.classList.add('hidden');
+  } else {
+    slider.noUiSlider.updateOptions(EffectsOptions[effect]);
   }
 });

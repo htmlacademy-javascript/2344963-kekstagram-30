@@ -1,6 +1,8 @@
 import { isEscapeKey } from './util.js';
 import { photosData } from './thumbnail-images.js';
 
+const COMMENTS_PER_PAGE = 5;
+
 const bodyElement = document.querySelector('body');
 
 const bigPictureElement = document.querySelector('.big-picture');
@@ -14,7 +16,6 @@ const commentTemplate = document.querySelector('#comment').content.querySelector
 
 let commentsArray = [];
 let currentIndex = 0;
-const commentsPerPage = 5;
 
 function fillBigPicture({ url, description, likes, comments }) {
   bigPictureElement.querySelector('.big-picture__img')
@@ -42,7 +43,7 @@ function renderComments() {
 }
 
 function loadComments() {
-  for (let i = 0; i < commentsPerPage; i++) {
+  for (let i = 0; i < COMMENTS_PER_PAGE; i++) {
     if (currentIndex >= commentsArray.length) {
       commentsLoaderElement.classList.add('hidden');
       break;
@@ -66,6 +67,10 @@ function onDocumentKeydown(evt) {
     evt.preventDefault();
     closeBigPicture();
   }
+}
+
+function onOverlayCloseButton() {
+  closeBigPicture();
 }
 
 function openBigPicture() {
@@ -100,8 +105,12 @@ function onPicturesContainerClick(evt) {
   }
 }
 
+function onCommentsLoaderElement() {
+  loadComments();
+}
+
 picturesContainerElement.addEventListener('click', onPicturesContainerClick);
 picturesContainerElement.addEventListener('keydown', onPicturesContainerClick);
-overlayCloseButton.addEventListener('click', closeBigPicture);
-commentsLoaderElement.addEventListener('click', loadComments);
+overlayCloseButton.addEventListener('click', onOverlayCloseButton);
+commentsLoaderElement.addEventListener('click', onCommentsLoaderElement);
 

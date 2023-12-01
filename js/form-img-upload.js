@@ -4,6 +4,8 @@ import { showAlert, isAlertOpen } from './alert.js';
 
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const HASHTAG_REGULAR_EXPRESSION = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAX_COMMENT_LENGTH = 140;
+const MAX_HASHTAGS_COUNT = 5;
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -15,8 +17,9 @@ const hashtagField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
 const submit = form.querySelector('.img-upload__submit');
 const effectsPreview = document.querySelectorAll('.effects__preview');
-const imgUploadPreview = document.querySelector('.img-upload__preview');
+const imgUploadPreview = document.querySelector('.img-upload__preview img');
 const effectLevel = document.querySelector('.img-upload__effect-level');
+const effectLevelValue = document.querySelector('.effect-level__value');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -24,10 +27,10 @@ const pristine = new Pristine(form, {
   errorClass: 'img-upload__field-wrapper--error'
 });
 
-const isTextFieldFocused = () =>
-  document.activeElement === hashtagField ||
-  document.activeElement === commentField;
-
+function isTextFieldFocused() {
+  return document.activeElement === hashtagField ||
+    document.activeElement === commentField;
+}
 
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt) && !isTextFieldFocused() && !isAlertOpen) {
@@ -36,11 +39,15 @@ function onDocumentKeydown(evt) {
   }
 }
 
+function onCanelButton() {
+  hideModal();
+}
+
 function showModal() {
   modal.classList.remove('hidden');
   body.classList.add('modal-open');
 
-  cancel.addEventListener('click', hideModal);
+  cancel.addEventListener('click', onCanelButton);
   document.addEventListener('keydown', onDocumentKeydown);
   input.disabled = true;
 }
@@ -49,7 +56,7 @@ function hideModal() {
   modal.classList.add('hidden');
   body.classList.remove('modal-open');
 
-  cancel.removeEventListener('click', hideModal);
+  cancel.removeEventListener('click', onCanelButton);
   document.removeEventListener('keydown', onDocumentKeydown);
 
   input.disabled = false;
@@ -57,6 +64,7 @@ function hideModal() {
   imgUploadPreview.style = 'none';
   effectLevel.classList.add('hidden');
   input.value = '';
+  effectLevelValue.setAttribute('value', '');
   form.reset();
   pristine.reset();
 }
@@ -77,7 +85,7 @@ function onChooseFile() {
 }
 
 function validateCommentField(value) {
-  return value.length <= 140;
+  return value.length <= MAX_COMMENT_LENGTH;
 }
 
 
@@ -100,7 +108,7 @@ function validateHashtagField(value) {
 
 function checksHashtagsCount(value) {
   const arrayHashtags = value.split(' ').filter(Boolean);
-  return arrayHashtags.length <= 5;
+  return arrayHashtags.length <= MAX_HASHTAGS_COUNT;
 }
 
 function checksHashtagsForRepetition(value) {
@@ -119,13 +127,13 @@ function checksHashtagsForRepetition(value) {
   return isValid;
 }
 
-const blockSubmitButton = () => {
+function blockSubmitButton() {
   submit.disabled = true;
-};
+}
 
-const unblockSubmitButton = () => {
+function unblockSubmitButton() {
   submit.disabled = false;
-};
+}
 
 function setUserFormSubmit(onSuccess) {
   form.addEventListener('submit', (evt) => {
@@ -140,18 +148,17 @@ function setUserFormSubmit(onSuccess) {
           onSuccess();
           showAlert('success');
         })
-        .catch((error) => {
+        .catch(() => {
           showAlert('error');
-          window.console.log(error);
         })
         .finally(unblockSubmitButton);
     }
   });
 }
 
-pristine.addValidator(commentField, validateCommentField, 'Длина комментария больше 140 символов', 1, false);
+pristine.addValidator(commentField, validateCommentField, `Длина комментария больше ${MAX_COMMENT_LENGTH} символов`, 1, false);
 pristine.addValidator(hashtagField, validateHashtagField, 'Хэш-тег должен начинаться с #, и иметь от 1 до 19 символов после #, хэш-теги должны быть разделены пробелом', 3, false);
-pristine.addValidator(hashtagField, checksHashtagsCount, 'Превышено количество хэш-тегов, максимум 5', 1, false);
+pristine.addValidator(hashtagField, checksHashtagsCount, `Превышено количество хэш-тегов, максимум ${MAX_HASHTAGS_COUNT}`, 1, false);
 pristine.addValidator(hashtagField, checksHashtagsForRepetition, 'Хэш-теги не должны повторяться', 2, false);
 
 
